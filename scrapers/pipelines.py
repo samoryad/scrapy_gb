@@ -9,7 +9,7 @@ from itemadapter import ItemAdapter
 from pymongo import MongoClient
 
 
-class BookparserPipeline:
+class ScrapersPipeline:
     def __init__(self):
         client = MongoClient('localhost', 27017)
         self.mongobase = client.labirintru_books

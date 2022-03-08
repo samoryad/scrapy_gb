@@ -1,6 +1,6 @@
 import scrapy
 from scrapy.http import HtmlResponse
-from bookparser.items import BookparserItem
+from scrapers.items import ScrapersItem
 
 
 class LabirintruSpider(scrapy.Spider):
@@ -36,4 +36,4 @@ class LabirintruSpider(scrapy.Spider):
             "//a[contains(@data-event-label, 'author')]/text()").get()
 
         url = response.url
-        yield BookparserItem(name=name, author=author, rate=rate, full_price=full_price, discount_price=discount_price, currency=currency, url=url)
+        yield ScrapersItem(name=name, author=author, rate=rate, full_price=full_price, discount_price=discount_price, currency=currency, url=url)

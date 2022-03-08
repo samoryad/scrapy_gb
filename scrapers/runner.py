@@ -1,11 +1,7 @@
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
-
-# from . import settings
-# from .spiders.labirintru import LabirintruSpider
-# from jobparser.spiders.sjru import SjruSpider
-from bookparser.bookparser import settings
-from bookparser.bookparser.spiders.labirintru import LabirintruSpider
+from scrapers import settings
+from scrapers.spiders.labirintru import LabirintruSpider
 
 if __name__ == '__main__':
     crawler_settings = Settings()
@@ -13,6 +9,7 @@ if __name__ == '__main__':
 
     process = CrawlerProcess(settings=crawler_settings)
     process.crawl(LabirintruSpider)
-    # process.crawl(SjruSpider)
+    # search = 'плитка'
+    # process.crawl(LeroymerlinSpider, search=search)
 
     process.start()

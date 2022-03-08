@@ -2,10 +2,11 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/items.html
+
 import scrapy
 
 
-class BookparserItem(scrapy.Item):
+class ScrapersItem(scrapy.Item):
     # define the fields for your item here like:
     name = scrapy.Field()
     rate = scrapy.Field()
