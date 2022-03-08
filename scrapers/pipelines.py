@@ -15,11 +15,16 @@ class ScrapersPipeline:
         self.mongobase = client.labirintru_books
 
     def process_item(self, item, spider):
-        item['full_price'] = self.str_to_int(item['full_price'])
-        item['discount_price'] = self.str_to_int(item['discount_price'])
-        collection = self.mongobase[spider.name]
-        collection.insert_one(item)
-        return item
+        if spider.name == 'labirintru':
+            item['full_price'] = self.str_to_int(item['full_price'])
+            item['discount_price'] = self.str_to_int(item['discount_price'])
+            collection = self.mongobase[spider.name]
+            collection.insert_one(item)
+            return item
+
+        elif spider.name == 'leroymerlin':
+            return item
 
     def str_to_int(self, string):
-        return int(string)
+        if string is not None:
+            return int(string)

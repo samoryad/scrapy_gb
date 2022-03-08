@@ -13,6 +13,8 @@ class ScrapersItem(scrapy.Item):
     author = scrapy.Field()
     full_price = scrapy.Field()
     discount_price = scrapy.Field()
+    price = scrapy.Field()
     currency = scrapy.Field()
     url = scrapy.Field()
+    photos = scrapy.Field()
     _id = scrapy.Field()
