@@ -14,6 +14,12 @@ class LeroymerlinSpider(scrapy.Spider):
             f"https://leroymerlin.ru/search/?q={kwargs.get('search')}/"]
 
     def parse(self, response: HtmlResponse):
+        # ограничил сбор данных пока двумя страницами (а то их более 100)
+        next_page = response.xpath(
+            "//a[@data-qa-pagination-item='right']/@href").get()
+        if int(next_page.split('=')[-1]) <= 2:
+            yield response.follow(next_page, callback=self.parse)
+
         links = response.xpath(
             "//a[contains(@data-qa, 'product-image')]/@href")
         for link in links:
