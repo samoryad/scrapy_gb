@@ -5,10 +5,13 @@
 
 
 # useful for handling different item types with a single interface
+import hashlib
+
 import scrapy
 from itemadapter import ItemAdapter
 from pymongo import MongoClient
 from scrapy.pipelines.images import ImagesPipeline
+from scrapy.utils.python import to_bytes
 
 
 class ScrapersPipeline:
@@ -18,14 +21,20 @@ class ScrapersPipeline:
 
     def process_item(self, item, spider):
         if spider.name == 'labirintru':
-            item['full_price'] = self.str_to_int(item['full_price'])
-            item['discount_price'] = self.str_to_int(item['discount_price'])
+
+            # сделал через ItemLoader, теперь не актуально
+            # item['full_price'] = self.str_to_int(item['full_price'])
+            # item['discount_price'] = self.str_to_int(item['discount_price'])
+
             collection = self.mongobase[spider.name]
             collection.insert_one(item)
             return item
 
         elif spider.name == 'leroymerlin':
-            item['price'] = self.str_to_int(item['price'])
+
+            # сделал через ItemLoader, теперь не актуально
+            # item['price'] = self.str_to_int(item['price'])
+
             collection = self.mongobase[spider.name]
             collection.insert_one(item)
             return item
@@ -44,8 +53,10 @@ class LeroymerlinPhotos(ImagesPipeline):
                 except Exception as e:
                     print(e)
 
-    # def file_path(self, request, response=None, info=None, *, item=None):
-    #     pass
+    def file_path(self, request, response=None, info=None, *, item=None):
+        item_name = item['name']
+        image_guid = hashlib.sha1(to_bytes(request.url)).hexdigest()
+        return f'{item_name}/{image_guid}.jpg'
 
     def item_completed(self, results, item, info):
         item['photos'] = [item[1] for item in results if item[0]]

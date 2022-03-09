@@ -1,5 +1,7 @@
 import scrapy
 from scrapy.http import HtmlResponse
+from scrapy.loader import ItemLoader
+
 from scrapers.items import ScrapersItem
 
 
@@ -20,20 +22,36 @@ class LabirintruSpider(scrapy.Spider):
             yield response.follow(link, callback=self.book_parse)
 
     def book_parse(self, response: HtmlResponse):
-        name = response.xpath(
-            "//div[contains(@class, 'prodtitle')]/h1/text()").get()
+        loader = ItemLoader(item=ScrapersItem(), response=response)
+        loader.add_xpath('name', "//div[contains(@class, 'prodtitle')]/h1/text()")
+        loader.add_xpath(
+            'discount_price',
+            "//span[contains(@class, 'buying-pricenew-val-number')]/text()")
+        loader.add_xpath(
+            'full_price',
+            "//span[contains(@class, 'buying-priceold-val-number')]/text()")
+        loader.add_xpath('currency', "//span[contains(@class, 'buying-pricenew-val-currency')]/text()")
+        loader.add_xpath('rate', "//div[contains(@id, 'rate')]/text()")
+        loader.add_xpath('author', "//a[contains(@data-event-label, 'author')]/text()")
+        loader.add_value('url', response.url)
+        loader.add_value('photos', 'None')
 
-        discount_price = response.xpath(
-            "//span[contains(@class, 'buying-pricenew-val-number')]/text()").get()
-        full_price = response.xpath(
-            "//span[contains(@class, 'buying-priceold-val-number')]/text()").get()
-        currency = response.xpath(
-            "//span[contains(@class, 'buying-pricenew-val-currency')]/text()").get()
+        yield loader.load_item()
 
-        rate = response.xpath(
-            "//div[contains(@id, 'rate')]/text()").get()
-        author = response.xpath(
-            "//a[contains(@data-event-label, 'author')]/text()").get()
-
-        url = response.url
-        yield ScrapersItem(name=name, author=author, rate=rate, full_price=full_price, discount_price=discount_price, currency=currency, url=url, photos=None)
+        # реализация без ItemLoader, пока оставил
+        # name = response.xpath(
+        #     "//div[contains(@class, 'prodtitle')]/h1/text()").get()
+        # discount_price = response.xpath(
+        #     "//span[contains(@class, 'buying-pricenew-val-number')]/text()").get()
+        # full_price = response.xpath(
+        #     "//span[contains(@class, 'buying-priceold-val-number')]/text()").get()
+        # currency = response.xpath(
+        #     "//span[contains(@class, 'buying-pricenew-val-currency')]/text()").get()
+        #
+        # rate = response.xpath(
+        #     "//div[contains(@id, 'rate')]/text()").get()
+        # author = response.xpath(
+        #     "//a[contains(@data-event-label, 'author')]/text()").get()
+        #
+        # url = response.url
+        # yield ScrapersItem(name=name, author=author, rate=rate, full_price=full_price, discount_price=discount_price, currency=currency, url=url, photos=None)
