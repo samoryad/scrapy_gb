@@ -27,7 +27,4 @@ __pycache__
 **/__pycache__
 __pycache__/
 *.pyc
-/.lesson_01_samples.py
-lesson_01_samples.py
-/lesson_01/common/utils.py
-/lesson_01/common/configs.json
+/scrapers/photos/
